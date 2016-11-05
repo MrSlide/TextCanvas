@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+tests/lcov-report/
+tests/lcov.info
+.coveralls.yml
+build/index.html

@@ -1,0 +1,72 @@
+{
+  "name": "text-canvas",
+  "version": "0.1.0",
+  "description": "Render text to a canvas element",
+  "main": "src/text-canvas.js",
+  "files": [
+    "src/text-canvas.js",
+    "build/text-canvas.js",
+    "build/text-canvas.js.map",
+    "build/text-canvas.min.js"
+  ],
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrSlide/TextCanvas.git"
+  },
+  "keywords": [
+    "canvas",
+    "text",
+    "font",
+    "raster",
+    "render",
+    "wrap"
+  ],
+  "author": {
+    "name": "Luis Rodrigues",
+    "url": "http://www.luisrodriguesweb.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MrSlide/TextCanvas/issues"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-eslint": "^7.1.0",
+    "babel-loader": "^6.2.7",
+    "babel-plugin-external-helpers": "^6.18.0",
+    "babel-plugin-istanbul": "^2.0.3",
+    "babel-plugin-transform-object-assign": "^6.8.0",
+    "babel-preset-es2015": "^6.18.0",
+    "fs-extra": "^1.0.0",
+    "gulp": "^3.9.1",
+    "gulp-coveralls": "^0.1.4",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.2.0",
+    "gulp-uglify": "^2.0.0",
+    "gulp-watch": "^4.3.10",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-babel-preprocessor": "^6.0.1",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.0.2",
+    "karma-jasmine-jquery": "^0.1.1",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-spec-reporter": "0.0.26",
+    "karma-webpack": "^1.8.0",
+    "phantomjs-prebuilt": "^2.1.13",
+    "recursive-readdir-sync": "^1.0.6",
+    "rollup": "^0.36.3",
+    "rollup-plugin-babel": "^2.6.1",
+    "run-sequence": "^1.2.2",
+    "standard": "^8.5.0",
+    "webpack": "^1.13.3"
+  }
+}
