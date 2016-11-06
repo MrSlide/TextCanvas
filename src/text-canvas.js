@@ -46,21 +46,7 @@ export default class TextCanvas {
    * @return {TextCanvas}
    */
   constructor (text, style = {}, resolution) {
-    this.text = text
-    this.style = style
-    this.resolution = resolution
-
-    this.createCanvas()
-  }
-
-  /**
-   * Get the default text style configuration.
-   *
-   * @private
-   * @type {TextStyle}
-   */
-  get defaultTextStyle () {
-    return {
+    this._style = {
       fontFamily: 'sans-serif',
       fontStyle: 'normal',
       fontWeight: 'normal',
@@ -71,6 +57,12 @@ export default class TextCanvas {
       textColor: 'black',
       wordWrap: false
     }
+
+    this.text = text
+    this.style = style
+    this.resolution = resolution
+
+    this.createCanvas()
   }
 
   /**
@@ -122,8 +114,8 @@ export default class TextCanvas {
    * @public
    * @type {TextStyle} - The new text style configuration
    */
-  set style (value = {}) {
-    this._style = Object.assign({}, this.defaultTextStyle, value)
+  set style (value) {
+    this._style = Object.assign(this._style, value)
 
     return this._style
   }

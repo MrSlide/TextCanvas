@@ -25,6 +25,18 @@ var TextCanvas = function () {
 
     _classCallCheck(this, TextCanvas);
 
+    this._style = {
+      fontFamily: 'sans-serif',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontVariant: 'normal',
+      fontSize: 16,
+      textAlign: 'left',
+      textBaseline: 'bottom',
+      textColor: 'black',
+      wordWrap: false
+    };
+
     this.text = text;
     this.style = style;
     this.resolution = resolution;
@@ -162,21 +174,6 @@ var TextCanvas = function () {
       return this._canvas;
     }
   }, {
-    key: 'defaultTextStyle',
-    get: function get() {
-      return {
-        fontFamily: 'sans-serif',
-        fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontVariant: 'normal',
-        fontSize: 16,
-        textAlign: 'left',
-        textBaseline: 'bottom',
-        textColor: 'black',
-        wordWrap: false
-      };
-    }
-  }, {
     key: 'text',
     get: function get() {
       return this._text;
@@ -200,10 +197,8 @@ var TextCanvas = function () {
     get: function get() {
       return this._style;
     },
-    set: function set() {
-      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-      this._style = _extends({}, this.defaultTextStyle, value);
+    set: function set(value) {
+      this._style = _extends(this._style, value);
 
       return this._style;
     }
