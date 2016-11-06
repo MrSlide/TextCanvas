@@ -1,0 +1,42 @@
+{
+  "name": "text-canvas",
+  "description": "Renders wrapped text to a 2D canvas element.",
+  "main": [
+    "build/text-canvas.js"
+  ],
+  "moduleType": [
+    "globals",
+    "amd",
+    "es6"
+  ],
+  "keywords": [
+    "canvas",
+    "text",
+    "string",
+    "font",
+    "raster",
+    "render",
+    "draw",
+    "wrap"
+  ],
+  "authors": [
+    "Luis Rodrigues (http://www.luisrodriguesweb.com)"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "configVars.js",
+    "gulpfile.js",
+    "karma.conf.js",
+    "package.json",
+    "npm-shrinkwrap.json",
+    "node_modules",
+    "tests",
+    "src/**/*.spec.js",
+    "gulp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrSlide/TextCanvas.git"
+  }
+}
