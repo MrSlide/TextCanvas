@@ -4,6 +4,14 @@
   (global.TextCanvas = factory());
 }(this, (function () { 'use strict';
 
+/**
+ * @name TextCanas
+ * @desc Renders wrapped text to a 2D canvas element.
+ * @author Luis Rodrigues (http://www.luisrodriguesweb.com)
+ * @version 0.1.0-alpha
+ * @license MIT
+ */
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12,13 +20,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var TextCanvas = function () {
   function TextCanvas(text) {
-    var textStyle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var style = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var resolution = arguments[2];
 
     _classCallCheck(this, TextCanvas);
 
     this.text = text;
-    this.textStyle = textStyle;
+    this.style = style;
+    this.resolution = resolution;
 
     this.createCanvas();
   }
@@ -32,22 +41,20 @@ var TextCanvas = function () {
       return this._canvas;
     }
   }, {
-    key: 'applyTextStyles',
-    value: function applyTextStyles() {
+    key: 'applyStyles',
+    value: function applyStyles() {
+      this._ctx.scale(this._resolution, this._resolution);
+
       var style = this._style;
 
-      this._ctx.font = style.fontStyle + ' ' + style.fontVariant + ' ' + style.fontWeight + ' ' + style.fontSize + ' ' + style.fontFamily;
+      this._ctx.font = style.fontStyle + ' ' + style.fontVariant + ' ' + style.fontWeight + ' ' + style.fontSize + 'px ' + style.fontFamily;
       this._ctx.textAlign = style.textAlign;
       this._ctx.textBaseline = style.textBaseline;
       this._ctx.fillStyle = style.textColor;
-      this._ctx.shadowBlur = style.shadowBlur;
-      this._ctx.shadowOffsetX = style.shadowOffsetX;
-      this._ctx.shadowOffsetY = style.shadowOffsetY;
-      this._ctx.shadowColor = style.shadowColor;
     }
   }, {
-    key: 'createTextLines',
-    value: function createTextLines() {
+    key: 'createLines',
+    value: function createLines() {
       var forcedLines = this._text.split('\n');
 
       if (!this._style.wordWrap) {
@@ -56,31 +63,103 @@ var TextCanvas = function () {
 
       var spaceMeasure = this._ctx.measureText(' ');
       var lines = [];
-      var lineWidth = 0;
-      var lineContents = '';
+      var lineHeight = this._style.lineHeight || this._style.fontSize * 1.2;
+      var currentLine = {
+        text: '',
+        width: 0,
+        height: lineHeight
+      };
+      var lineWords = void 0;
+      var wordMeasure = void 0;
 
       for (var i = 0; i < forcedLines.length; i++) {
-        var lineWords = forcedLines.split(' ');
+        lineWords = forcedLines[i].split(' ');
 
         for (var j = 0; j < lineWords.length; j++) {
-          var wordMeasure = this._ctx.measureText(lineWords[j]);
+          wordMeasure = this._ctx.measureText(lineWords[j]);
 
-          if (lineWidth + wordMeasure.width > this._style.wordWrap) {
-            if (j) {
-              lines.push(lineContents.trim());
+          if (currentLine.width + wordMeasure.width > this._style.wordWrap) {
+            if (j && i) {
+              currentLine.text = currentLine.text.trim();
+              currentLine.width -= spaceMeasure.width;
+
+              lines.push(currentLine);
+
+              currentLine = {
+                text: '',
+                width: 0,
+                height: lineHeight
+              };
             }
-            lineWidth = wordMeasure.width;
-            lineContents = lineWords[j];
+
+            currentLine.width = wordMeasure.width + spaceMeasure.width;
+            currentLine.text = lineWords[j] + ' ';
           } else {
-            lineWidth += wordMeasure.width + spaceMeasure.width;
-            lineContents += lineWords[j] + ' ';
+            currentLine.width += wordMeasure.width + spaceMeasure.width;
+            currentLine.text += lineWords[j] + ' ';
           }
         }
 
-        lines.push(lineContents.trim());
-        lineWidth = 0;
-        lineContents = '';
+        currentLine.text = currentLine.text.trim();
+        currentLine.width -= spaceMeasure.width;
+
+        lines.push(currentLine);
+
+        currentLine = {
+          text: '',
+          width: 0,
+          height: lineHeight
+        };
       }
+
+      return lines;
+    }
+  }, {
+    key: 'getCanvasDimensions',
+    value: function getCanvasDimensions(lines) {
+      var maxWith = 0;
+      var maxHeight = 0;
+
+      for (var i = 0; i < lines.length; i++) {
+        maxWith = Math.max(maxWith, lines[i].width);
+        maxHeight += lines[i].height;
+      }
+
+      return {
+        width: Math.ceil(maxWith),
+        height: Math.ceil(maxHeight)
+      };
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      this.applyStyles();
+
+      var lines = this.createLines();
+      var dimensions = this.getCanvasDimensions(lines);
+
+      this._canvas.width = (dimensions.width + dimensions.adjustment) * this._resolution;
+      this._canvas.height = (dimensions.height + dimensions.adjustment) * this._resolution;
+
+      this.applyStyles();
+
+      this._ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+
+      var x = 0;
+      var y = 0;
+
+      if (this._style.textAlign === 'center') {
+        x = dimensions.width / 2;
+      } else if (this._style.textAlign === 'right') {
+        x = dimensions.width;
+      }
+
+      for (var i = 0; i < lines.length; i++) {
+        y += lines[i].height;
+        this._ctx.fillText(lines[i].text, x, y);
+      }
+
+      return this._canvas;
     }
   }, {
     key: 'defaultTextStyle',
@@ -90,16 +169,11 @@ var TextCanvas = function () {
         fontStyle: 'normal',
         fontWeight: 'normal',
         fontVariant: 'normal',
-        fontSize: '16px',
+        fontSize: 16,
         textAlign: 'left',
-        textBaseline: 'ideographic',
+        textBaseline: 'bottom',
         textColor: 'black',
-        shadowBlur: 0,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
-        shadowColor: 'black',
-        wordWrap: false,
-        wordBreak: false
+        wordWrap: false
       };
     }
   }, {
@@ -122,7 +196,7 @@ var TextCanvas = function () {
       return this._text;
     }
   }, {
-    key: 'textStyle',
+    key: 'style',
     get: function get() {
       return this._style;
     },
