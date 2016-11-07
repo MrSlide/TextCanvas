@@ -293,8 +293,8 @@ export default class TextCanvas {
     const lines = this.createLines()
     const dimensions = this.getCanvasDimensions(lines)
 
-    this._canvas.width = (dimensions.width + dimensions.adjustment) * this._resolution
-    this._canvas.height = (dimensions.height + dimensions.adjustment) * this._resolution
+    this._canvas.width = dimensions.width * this._resolution
+    this._canvas.height = dimensions.height * this._resolution
 
     this.applyStyles() // After changing the canvas dimensions the styles get reset
 

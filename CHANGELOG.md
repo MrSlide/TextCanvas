@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [v0.1.2-alpha] - 2016-11-07
+
+### Fixed
+
+- Fixed a critical issue that would cause the canvas to have no dimensions.
+
+
 ## [v0.1.1-alpha] - 2016-11-07
 
 ### Fixed
