@@ -199,10 +199,6 @@ export default class TextCanvas {
     // Create lines out of the hard line breaks
     const forcedLines = this._text.split('\n')
 
-    if (!this._style.wordWrap) {
-      return forcedLines
-    }
-
     const spaceMeasure = this._ctx.measureText(' ')
     const lines = []
     const lineHeight = this._style.lineHeight || this._style.fontSize * 1.2
@@ -222,7 +218,7 @@ export default class TextCanvas {
         wordMeasure = this._ctx.measureText(lineWords[j])
 
         // The word will not fit the current line
-        if (currentLine.width + wordMeasure.width > this._style.wordWrap) {
+        if (this._style.wordWrap && currentLine.width + wordMeasure.width > this._style.wordWrap) {
           // Only add the word to the next line if there is a previous line
           if (j && i) {
             currentLine.text = currentLine.text.trim()
