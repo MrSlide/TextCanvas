@@ -4,7 +4,7 @@
  * @name TextCanas
  * @desc Renders wrapped text to a 2D canvas element.
  * @author Luis Rodrigues (http://www.luisrodriguesweb.com)
- * @version 0.1.0-alpha
+ * @version 0.1.1-alpha
  * @license MIT
  */
 
