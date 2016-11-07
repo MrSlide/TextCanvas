@@ -4,7 +4,7 @@
  * @name TextCanas
  * @desc Renders wrapped text to a 2D canvas element.
  * @author Luis Rodrigues (http://www.luisrodriguesweb.com)
- * @version 0.1.1-alpha
+ * @version 0.1.3-alpha
  * @license MIT
  */
 
@@ -218,33 +218,25 @@ export default class TextCanvas {
         wordMeasure = this._ctx.measureText(lineWords[j])
 
         // The word will not fit the current line
-        if (this._style.wordWrap && currentLine.width + wordMeasure.width > this._style.wordWrap) {
-          // Only add the word to the next line if there is a previous line
-          if (j && i) {
-            currentLine.text = currentLine.text.trim()
-            currentLine.width -= spaceMeasure.width
+        if (this._style.wordWrap && currentLine.text && currentLine.width + wordMeasure.width > this._style.wordWrap) {
+          // End the current line before starting a new one
+          currentLine.text = currentLine.text.trim()
+          currentLine.width -= spaceMeasure.width
 
-            lines.push(currentLine)
+          lines.push(currentLine)
 
-            currentLine = {
-              text: '',
-              width: 0,
-              height: lineHeight
-            }
+          currentLine = {
+            text: '',
+            width: 0,
+            height: lineHeight
           }
-
-          currentLine.width = wordMeasure.width + spaceMeasure.width
-          currentLine.text = lineWords[j] + ' '
-        // The word fits the current line
-        } else {
-          currentLine.width += wordMeasure.width + spaceMeasure.width
-          currentLine.text += lineWords[j] + ' '
         }
+
+        currentLine.width += wordMeasure.width + spaceMeasure.width
+        currentLine.text += lineWords[j] + ' '
       }
 
-      currentLine.text = currentLine.text.trim()
-      currentLine.width -= spaceMeasure.width
-
+      // End the current line before proceeding to the next forced line
       lines.push(currentLine)
 
       currentLine = {

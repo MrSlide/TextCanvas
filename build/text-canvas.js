@@ -8,7 +8,7 @@
  * @name TextCanas
  * @desc Renders wrapped text to a 2D canvas element.
  * @author Luis Rodrigues (http://www.luisrodriguesweb.com)
- * @version 0.1.0-alpha
+ * @version 0.1.3-alpha
  * @license MIT
  */
 
@@ -69,10 +69,6 @@ var TextCanvas = function () {
     value: function createLines() {
       var forcedLines = this._text.split('\n');
 
-      if (!this._style.wordWrap) {
-        return forcedLines;
-      }
-
       var spaceMeasure = this._ctx.measureText(' ');
       var lines = [];
       var lineHeight = this._style.lineHeight || this._style.fontSize * 1.2;
@@ -90,30 +86,22 @@ var TextCanvas = function () {
         for (var j = 0; j < lineWords.length; j++) {
           wordMeasure = this._ctx.measureText(lineWords[j]);
 
-          if (currentLine.width + wordMeasure.width > this._style.wordWrap) {
-            if (j && i) {
-              currentLine.text = currentLine.text.trim();
-              currentLine.width -= spaceMeasure.width;
+          if (this._style.wordWrap && currentLine.text && currentLine.width + wordMeasure.width > this._style.wordWrap) {
+            currentLine.text = currentLine.text.trim();
+            currentLine.width -= spaceMeasure.width;
 
-              lines.push(currentLine);
+            lines.push(currentLine);
 
-              currentLine = {
-                text: '',
-                width: 0,
-                height: lineHeight
-              };
-            }
-
-            currentLine.width = wordMeasure.width + spaceMeasure.width;
-            currentLine.text = lineWords[j] + ' ';
-          } else {
-            currentLine.width += wordMeasure.width + spaceMeasure.width;
-            currentLine.text += lineWords[j] + ' ';
+            currentLine = {
+              text: '',
+              width: 0,
+              height: lineHeight
+            };
           }
-        }
 
-        currentLine.text = currentLine.text.trim();
-        currentLine.width -= spaceMeasure.width;
+          currentLine.width += wordMeasure.width + spaceMeasure.width;
+          currentLine.text += lineWords[j] + ' ';
+        }
 
         lines.push(currentLine);
 
@@ -150,8 +138,8 @@ var TextCanvas = function () {
       var lines = this.createLines();
       var dimensions = this.getCanvasDimensions(lines);
 
-      this._canvas.width = (dimensions.width + dimensions.adjustment) * this._resolution;
-      this._canvas.height = (dimensions.height + dimensions.adjustment) * this._resolution;
+      this._canvas.width = dimensions.width * this._resolution;
+      this._canvas.height = dimensions.height * this._resolution;
 
       this.applyStyles();
 

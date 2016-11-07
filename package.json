@@ -1,6 +1,6 @@
 {
   "name": "text-canvas",
-  "version": "0.1.2-alpha",
+  "version": "0.1.3-alpha",
   "description": "Renders wrapped text to a 2D canvas element.",
   "main": "build/text-canvas.js",
   "jsnext:main": "src/text-canvas.js",
